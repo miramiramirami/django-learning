@@ -1,7 +1,8 @@
 from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse
 from users.forms import UserLoginForm, UserRegistrationForm, UserProfileForm
-from django.contrib import auth
+from django.contrib import auth, messages
+
 
 def login(request):
   if request.method == 'POST':
@@ -21,11 +22,11 @@ def login(request):
 
 def registration(request):
     if request.method == 'POST':
-        form = UserRegistrationForm(data=request.POST)
+        form = UserRegistrationForm(data=request.POST, files=request.FILES)
         if form.is_valid():
             user = form.save()
             auth.login(request, user) 
-            return HttpResponseRedirect(reverse('users:login'))
+            return HttpResponseRedirect(reverse('index'))
     else:
         form = UserRegistrationForm()
     context = {'form': form}
@@ -41,5 +42,9 @@ def profile(request):
         form = UserProfileForm(instance=request.user)
     context = {'title': 'Store - Профиль', 'form': form}
     return render(request, 'users/profile.html', context)
+
+def logout(request):
+   auth.logout(request)
+   return HttpResponseRedirect(reverse('index'))
 
 
