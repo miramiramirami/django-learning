@@ -44,6 +44,11 @@
                                   <i class="fab fa-facebook fa-2x" style="color: #405794;"></i>
                               </a>
                           </div> 
+                        {% if form.errors %}
+                          <div class="alert alert-danger">
+                              {{ form.errors }}
+                          </div>
+                        {% endif %}
                       </form>
                   </div>
                   <div class="card-footer text-center">
