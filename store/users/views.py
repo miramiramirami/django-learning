@@ -2,6 +2,7 @@ from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse
 from users.forms import UserLoginForm, UserRegistrationForm, UserProfileForm
 from django.contrib import auth, messages
+from products.models import Basket
 
 
 def login(request):
@@ -40,7 +41,21 @@ def profile(request):
             return HttpResponseRedirect(reverse('users:profile'))
     else:
         form = UserProfileForm(instance=request.user)
-    context = {'title': 'Store - Профиль', 'form': form}
+
+    basket = Basket.objects.filter(user=request.user)
+    total_sum = 0
+    total_quantity = 0
+    for basket_item in basket:
+        total_sum += basket_item.total_price()
+        total_quantity += basket_item.quantity
+
+    context = {
+        'title': 'Store - Профиль',
+        'form': form,
+        'basket': basket,
+        'total_sum': total_sum,
+        'total_quantity': total_quantity,
+    }
     return render(request, 'users/profile.html', context)
 
 def logout(request):

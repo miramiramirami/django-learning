@@ -3,7 +3,6 @@ from users.models import User
 from django import forms
 
 
-
 class UserLoginForm(AuthenticationForm):
   username = forms.CharField(widget=forms.TextInput(attrs={
     'class': 'form-control py-4', 'placeholder': 'Введите имя пользователя',  
@@ -15,7 +14,6 @@ class UserLoginForm(AuthenticationForm):
   class Meta:
     model = User
     fields = ('username', 'password')
-
 
 
 class UserRegistrationForm(UserCreationForm):
