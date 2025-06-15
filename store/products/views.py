@@ -1,6 +1,7 @@
 from django.shortcuts import render, HttpResponseRedirect, get_object_or_404
 from products.models import *
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 #funcs = controllers
 
@@ -10,14 +11,22 @@ def index(request):
     return render(request, 'products/index.html', context)
 
 
-def products(request):
+
+def products(request, category_id=1, page_number=1):
+    products = Product.objects.all() if category_id == 1 else Product.objects.filter(category_id=category_id)
+
+    per_page = 6
+    paginator = Paginator(products, per_page)
+    products_paginator = paginator.page(page_number)
+
     context = {
         'title': 'Store - Каталог',
-        'products': Product.objects.all(),
         'categories': Category.objects.all(),
-
-    }
+        'products': products_paginator,
+        }
+    
     return render(request, 'products/products.html', context)
+
 
 
 @login_required
@@ -33,6 +42,8 @@ def basket_add(request, product_id):
         basket.save()
 
     return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
+
 
 def basket_remove(request, product_id):
     basket = get_object_or_404(Basket, id=product_id, user=request.user)
@@ -57,3 +68,5 @@ def basket_decrement(request, basket_id):
     else:
         basket_item.delete()  # Если стало 0, удалим
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+

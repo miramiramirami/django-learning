@@ -21,6 +21,8 @@ class Product(models.Model):
     def __str__(self):
         return f'Продукт: {self.name} | Категория: {self.category.name}'
 
+
+
 class Basket(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     product = models.ForeignKey(to=Product, on_delete=models.CASCADE)
@@ -33,6 +35,8 @@ class Basket(models.Model):
     def sum(self):
         from django.db import models
 from users.models import User
+
+
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -53,6 +57,9 @@ class Product(models.Model):
 
     def __str__(self):
         return f'Продукт: {self.name} | Категория: {self.category.name}'
+
+
+
 
 class Basket(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
